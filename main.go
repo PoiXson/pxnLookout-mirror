@@ -55,6 +55,7 @@ func main() {
 	print("\n");
 	waitgroup.Wait();
 	print("\n");
+	os.Exit(0);
 }
 
 

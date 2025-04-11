@@ -59,17 +59,14 @@ waitgroup *sync.WaitGroup, stopchan chan bool) LookoutState {
 	}
 	intervalSecs, err := ParseTimeToSeconds(interval);
 	if err != nil { log.Panic(err); }
-
 	// connect db
 	db, err := GetDB(name);
 	if err != nil { log.Panic(err); }
-
 	// connect snmp
 	var snmp *LookoutStateSnmp;
 	if config.Snmp != nil {
 		snmp = NewSnmp(name, config, db);
 	}
-
 	// monitor instance
 	look := LookoutState{
 		Name:      name,
@@ -96,7 +93,6 @@ func (look LookoutState) Run() {
 		}
 		look.WaitGroup.Done();
 	}();
-
 	// monitor loop
 	fmt.Printf("Monitoring Server: [%s] %s\n", look.Name, look.Config.Host);
 	for loops:=1; ; loops++ {

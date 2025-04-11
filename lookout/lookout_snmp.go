@@ -86,8 +86,6 @@ func NewSnmp(name string, config ConfigHost, db *sql.DB) *LookoutStateSnmp {
 	};
 }
 
-
-
 func (look LookoutStateSnmp) Close() {
 	log.Printf("Close: %s\n", look.Name);
 	look.Snmp.Conn.Close();
