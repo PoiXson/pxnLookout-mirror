@@ -169,3 +169,21 @@ func ParseTimeToSeconds(str string) (int, error) {
 		{ result, err = strconv.Atoi(str); } // default
 	return result, err;
 }
+
+
+
+func FormatBandwidthPerSecond(bw int64) string {
+	bw = bw / 10;
+	if bw > 1000000000000 { return fmt.Sprintf("%dTb/s", bw/1000000000000); }
+	if bw >    1000000000 { return fmt.Sprintf("%dGb/s",    bw/1000000000); }
+	if bw >       1000000 { return fmt.Sprintf("%dMb/s",       bw/1000000); }
+	if bw >          1000 { return fmt.Sprintf("%dKb/s",          bw/1000); }
+	return fmt.Sprintf("%dB/s", bw);
+}
+func FormatBandwidth(bw uint64) string {
+	if bw > 1000000000000 { return fmt.Sprintf("%dT", bw/1000000000000); }
+	if bw >    1000000000 { return fmt.Sprintf("%dG",    bw/1000000000); }
+	if bw >       1000000 { return fmt.Sprintf("%dM",       bw/1000000); }
+	if bw >          1000 { return fmt.Sprintf("%dK",          bw/1000); }
+	return fmt.Sprintf("%dB", bw);
+}
