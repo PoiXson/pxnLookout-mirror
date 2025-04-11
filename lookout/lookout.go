@@ -1,12 +1,14 @@
 package lookout;
 
 import(
+	"os"
 	"log"
 	"fmt"
 	"time"
 	"sync"
 	"strings"
 	"strconv"
+	"io/ioutil"
 	"database/sql"
 	_ "github.com/tursodatabase/go-libsql"
 );
@@ -15,7 +17,8 @@ import(
 
 const microinterval = time.Millisecond * 800;
 const driver = "libsql";
-const dsn = "file:%s?_pragma=journal_mode=WAL&_pragma=synchronous=NORMAL";
+const dsn = "file:%s.db?_pragma=journal_mode=WAL&_pragma=synchronous=NORMAL";
+const dbPath ="db/";
 
 
 
@@ -143,18 +146,20 @@ func (look LookoutState) Run() {
 
 
 func GetDB(key string) (*sql.DB, error) {
-	file := fmt.Sprintf("%s.db", key);
-	db, err := sql.Open(driver, fmt.Sprintf(dsn, file));
+	// create db dir
+	if _, err := os.Stat(dbPath); os.IsNotExist(err) {
+		if err := os.Mkdir(dbPath, 0755); err != nil { return nil, err; }
+	}
+	// connect db
+	db, err := sql.Open(driver, fmt.Sprintf(dsn, dbPath+key));
 	if err != nil { return nil, err; }
-
-
-
-
-
-
-
-
-
+	if err := db.Ping(); err != nil {
+		return nil, err;
+	}
+	// load and run schema
+	schema, err := ioutil.ReadFile("schema.sql");
+	if err != nil { return nil, err; }
+	if _, err := db.Exec(string(schema)); err != nil { return nil, err; }
 	return db, nil;
 }
 
