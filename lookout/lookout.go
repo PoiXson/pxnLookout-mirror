@@ -128,11 +128,13 @@ func (look LookoutState) Run() {
 				sleep = 0;
 			}
 		}
+//TODO: need to round this to nearest time unit
+		var tim  int64 = now.Unix();
 		// update snmp
 		if look.Snmp != nil {
-			err := look.Snmp.Run();
+			err := look.Snmp.Run(tim);
 			if err != nil {
-				log.Printf("Error: <%s> %v", look.Name, err);
+				log.Printf("Error: <%s>\n  %v\n\n", look.Name, err);
 			}
 		}
 	}
